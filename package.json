@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prerender=false",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:tarea7_cloud2025": "node dist/tarea7_cloud2025/server/server.mjs"
@@ -19,7 +19,7 @@
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/platform-server": "^19.1.0",
-    "@angular/router": "^19.1.0",
+    "@angular/router": "^19.2.15",
     "@angular/ssr": "^19.1.5",
     "express": "^4.18.2",
     "rxjs": "~7.8.0",
