@@ -1,0 +1,48 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: {}  # botón "Run workflow"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Compress dist
+        run: |
+          ls -la dist || true
+          zip -r build.zip dist
+      - name: Create Draft Release
+        id: create_release
+        uses: actions/create-release@v1
+        env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
+        with:
+          tag_name: tarea7.${{ github.sha }}
+          release_name: Tarea 7 Cloud ${{ github.sha }}
+          draft: true
+          prerelease: false
+      - name: Upload Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build.zip
+          asset_name: build-${{ github.sha }}.zip
+          asset_content_type: application/zip
+      - name: Publish Release
+        uses: eregon/publish-release@v1
+        env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
+        with:
+          release_id: ${{ steps.create_release.outputs.id }}
+
